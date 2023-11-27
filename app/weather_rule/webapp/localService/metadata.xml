@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema Namespace="WeatherService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <EntityContainer Name="EntityContainer">
+                <EntitySet Name="Measure" EntityType="WeatherService.Measure"/>
+                <EntitySet Name="RuleConfig" EntityType="WeatherService.RuleConfig">
+                    <NavigationPropertyBinding Path="Locations" Target="RuleConfigAssignmentsToLocations"/>
+                    <NavigationPropertyBinding Path="LocationNodes" Target="RuleConfigAssignmentsToLocationNodes"/>
+                    <NavigationPropertyBinding Path="Products" Target="RuleConfigAssignmentsToProducts"/>
+                    <NavigationPropertyBinding Path="ProductNodes" Target="RuleConfigAssignmentsToProductNodes"/>
+                </EntitySet>
+                <EntitySet Name="RuleConfigAssignmentsToLocations" EntityType="WeatherService.RuleConfigAssignmentsToLocations">
+                    <NavigationPropertyBinding Path="DIFConfigRef" Target="RuleConfig"/>
+                </EntitySet>
+                <EntitySet Name="RuleConfigAssignmentsToLocationNodes" EntityType="WeatherService.RuleConfigAssignmentsToLocationNodes">
+                    <NavigationPropertyBinding Path="DIFConfigRef" Target="RuleConfig"/>
+                </EntitySet>
+                <EntitySet Name="RuleConfigAssignmentsToProducts" EntityType="WeatherService.RuleConfigAssignmentsToProducts">
+                    <NavigationPropertyBinding Path="DIFConfigRef" Target="RuleConfig"/>
+                </EntitySet>
+                <EntitySet Name="RuleConfigAssignmentsToProductNodes" EntityType="WeatherService.RuleConfigAssignmentsToProductNodes">
+                    <NavigationPropertyBinding Path="DIFConfigRef" Target="RuleConfig"/>
+                </EntitySet>
+            </EntityContainer>
+            <EntityType Name="Measure">
+                <Key>
+                    <PropertyRef Name="sKey"/>
+                </Key>
+                <Property Name="sKey" Type="Edm.String" Nullable="false"/>
+                <Property Name="MANDT" Type="Edm.String" MaxLength="3" Nullable="false"/>
+                <Property Name="MeasureName" Type="Edm.String" Nullable="false"/>
+                <Property Name="Description" Type="Edm.String" Nullable="false"/>
+            </EntityType>
+            <EntityType Name="RuleConfig">
+                <Key>
+                    <PropertyRef Name="sKey"/>
+                </Key>
+                <Property Name="sKey" Type="Edm.String" Nullable="false"/>
+                <Property Name="Client" Type="Edm.String" MaxLength="3" Nullable="false"/>
+                <Property Name="Name" Type="Edm.String" MaxLength="100" Nullable="false"/>
+                <Property Name="Rule" Type="Edm.String" MaxLength="1000" Nullable="false"/>
+                <Property Name="Disabled" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <Property Name="Granularity" Type="Edm.String" MaxLength="100" Nullable="false" DefaultValue="DAY"/>
+                <Property Name="TimeShift" Type="Edm.Int32" Nullable="false" DefaultValue="0"/>
+                <Property Name="PastHorizon" Type="Edm.Int32" Nullable="false" DefaultValue="90"/>
+                <Property Name="FutureHorizon" Type="Edm.Int32" Nullable="false" DefaultValue="30"/>
+                <Property Name="LocationHierarchyID" Type="Edm.String" MaxLength="10" Nullable="false" DefaultValue="0000000000"/>
+                <Property Name="ProductHierarchyID" Type="Edm.String" MaxLength="10" Nullable="false" DefaultValue="0000000000"/>
+                <Property Name="OrderChannelID" Type="Edm.String" MaxLength="2" Nullable="false" DefaultValue="00"/>
+                <Property Name="SalesOrgID" Type="Edm.String" MaxLength="28" Nullable="false" DefaultValue="0000000000000000000000000000"/>
+                <NavigationProperty Name="Locations" Type="Collection(WeatherService.RuleConfigAssignmentsToLocations)"/>
+                <NavigationProperty Name="LocationNodes" Type="Collection(WeatherService.RuleConfigAssignmentsToLocationNodes)"/>
+                <NavigationProperty Name="Products" Type="Collection(WeatherService.RuleConfigAssignmentsToProducts)"/>
+                <NavigationProperty Name="ProductNodes" Type="Collection(WeatherService.RuleConfigAssignmentsToProductNodes)"/>
+            </EntityType>
+            <EntityType Name="RuleConfigAssignmentsToLocations">
+                <Key>
+                    <PropertyRef Name="sKey"/>
+                </Key>
+                <Property Name="sKey" Type="Edm.String" Nullable="false"/>
+                <Property Name="Client" Type="Edm.String" MaxLength="3" Nullable="false"/>
+                <Property Name="DIFConfig" Type="Edm.String" Nullable="false"/>
+                <NavigationProperty Name="DIFConfigRef" Type="WeatherService.RuleConfig">
+                    <ReferentialConstraint Property="DIFConfig" ReferencedProperty="sKey"/>
+                </NavigationProperty>
+                <Property Name="DDF_Location" Type="Edm.Binary"/>
+            </EntityType>
+            <EntityType Name="RuleConfigAssignmentsToLocationNodes">
+                <Key>
+                    <PropertyRef Name="sKey"/>
+                </Key>
+                <Property Name="sKey" Type="Edm.String" Nullable="false"/>
+                <Property Name="Client" Type="Edm.String" MaxLength="3" Nullable="false"/>
+                <Property Name="DIFConfig" Type="Edm.String" Nullable="false"/>
+                <NavigationProperty Name="DIFConfigRef" Type="WeatherService.RuleConfig">
+                    <ReferentialConstraint Property="DIFConfig" ReferencedProperty="sKey"/>
+                </NavigationProperty>
+                <Property Name="DDF_Location_Hierarchy_Node" Type="Edm.Binary"/>
+            </EntityType>
+            <EntityType Name="RuleConfigAssignmentsToProducts">
+                <Key>
+                    <PropertyRef Name="sKey"/>
+                </Key>
+                <Property Name="sKey" Type="Edm.String" Nullable="false"/>
+                <Property Name="Client" Type="Edm.String" MaxLength="3" Nullable="false"/>
+                <Property Name="DIFConfig" Type="Edm.String" Nullable="false"/>
+                <NavigationProperty Name="DIFConfigRef" Type="WeatherService.RuleConfig">
+                    <ReferentialConstraint Property="DIFConfig" ReferencedProperty="sKey"/>
+                </NavigationProperty>
+                <Property Name="DDF_Product" Type="Edm.Binary"/>
+            </EntityType>
+            <EntityType Name="RuleConfigAssignmentsToProductNodes">
+                <Key>
+                    <PropertyRef Name="sKey"/>
+                </Key>
+                <Property Name="sKey" Type="Edm.String" Nullable="false"/>
+                <Property Name="Client" Type="Edm.String" MaxLength="3" Nullable="false"/>
+                <Property Name="DIFConfig" Type="Edm.String" Nullable="false"/>
+                <NavigationProperty Name="DIFConfigRef" Type="WeatherService.RuleConfig">
+                    <ReferentialConstraint Property="DIFConfig" ReferencedProperty="sKey"/>
+                </NavigationProperty>
+                <Property Name="DDF_Product_Hierarchy_Node" Type="Edm.Binary"/>
+            </EntityType>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>
